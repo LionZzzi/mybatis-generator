@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * MySql 相关操作
+ *
  * @author Zyyi
  * @since 2020/10/15 5:38 下午
  */
