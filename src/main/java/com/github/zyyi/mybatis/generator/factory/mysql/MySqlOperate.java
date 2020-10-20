@@ -204,7 +204,7 @@ public class MySqlOperate implements DdlAutoOperate {
             Column column = field.getAnnotation(Column.class);
             // 拼接字段
             columnSql.add(
-                    this.getSql(
+                    String.format(
                             StatementConstant.COLUMN_INFO,
                             // 字段名称
                             this.getColumnValue(column.value(), field),
@@ -227,7 +227,7 @@ public class MySqlOperate implements DdlAutoOperate {
     /**
      * 索引语句
      *
-     * @param fields 实体类字段
+     * @param fields 包含Index注解的实体类字段
      * @return 索引语句
      */
     private List<String> indexSql(List<Field> fields) {
@@ -244,7 +244,7 @@ public class MySqlOperate implements DdlAutoOperate {
                             // 拼接索引
                             Index index = field.getAnnotation(Index.class);
                             indexSql.add(
-                                    this.getSql(
+                                    String.format(
                                             StatementConstant.INDEX_INFO,
                                             // 索引类型
                                             index.type().getValue(),
@@ -265,7 +265,7 @@ public class MySqlOperate implements DdlAutoOperate {
                         if (field.isPresent()) {
                             Index index = field.get().getAnnotation(Index.class);
                             indexSql.add(
-                                    this.getSql(
+                                    String.format(
                                             StatementConstant.INDEX_INFO,
                                             // 索引类型
                                             index.type().getValue(),
@@ -288,13 +288,11 @@ public class MySqlOperate implements DdlAutoOperate {
     /**
      * 删表语句
      *
-     * @param classes 需要删除的类
+     * @param classes 包含Table注解的类
      * @return 删表语句
      */
     private List<String> dropTableSql(Collection<Class<?>> classes) {
         return classes.stream()
-                // 包含Table注解的类
-                .filter(clazz -> clazz.getAnnotation(Table.class) != null)
                 .map(clazz -> {
                     Table table = clazz.getAnnotation(Table.class);
                     String tableName = this.getTableValue(table.value(), clazz);
