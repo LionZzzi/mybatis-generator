@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.github.zyyi.mybatis.generator.constant.DbTypeConstant;
-import com.github.zyyi.mybatis.generator.factory.MySqlOperate;
+import com.github.zyyi.mybatis.generator.factory.mysql.MySqlOperate;
 import com.github.zyyi.mybatis.generator.property.InitProperties;
 
 import javax.annotation.PostConstruct;

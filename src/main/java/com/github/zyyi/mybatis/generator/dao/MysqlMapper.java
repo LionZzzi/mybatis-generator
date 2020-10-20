@@ -1,8 +1,8 @@
 package com.github.zyyi.mybatis.generator.dao;
 
+import com.github.zyyi.mybatis.generator.entity.DbIndex;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import com.github.zyyi.mybatis.generator.entity.DbIndex;
 
 import java.util.List;
 
@@ -10,15 +10,7 @@ import java.util.List;
  * @author Zyyi
  * @since 2020/10/8 9:51 上午
  */
-public interface DbMapper {
-
-    /**
-     * 初始化表
-     *
-     * @param sql 建表语句
-     */
-    @Select("${sql}")
-    void run(@Param("sql") String sql);
+public interface MysqlMapper extends CommonMapper {
 
     /**
      * 获取当前数据库

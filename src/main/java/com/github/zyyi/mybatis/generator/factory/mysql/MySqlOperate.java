@@ -1,12 +1,13 @@
-package com.github.zyyi.mybatis.generator.factory;
+package com.github.zyyi.mybatis.generator.factory.mysql;
 
 import com.github.zyyi.mybatis.generator.annotation.Column;
 import com.github.zyyi.mybatis.generator.annotation.Index;
 import com.github.zyyi.mybatis.generator.annotation.Table;
 import com.github.zyyi.mybatis.generator.constant.DdlAutoConstant;
 import com.github.zyyi.mybatis.generator.constant.StatementConstant;
-import com.github.zyyi.mybatis.generator.dao.DbMapper;
+import com.github.zyyi.mybatis.generator.dao.MysqlMapper;
 import com.github.zyyi.mybatis.generator.entity.DbIndex;
+import com.github.zyyi.mybatis.generator.factory.DdlAutoOperate;
 import com.github.zyyi.mybatis.generator.property.InitProperties;
 import com.github.zyyi.mybatis.generator.util.ClassUtil;
 import com.github.zyyi.mybatis.generator.util.FieldUtil;
@@ -32,13 +33,13 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MySqlOperate implements DdlAutoOperate {
 
-    private final DbMapper dbMapper;
+    private final MysqlMapper mysqlMapper;
     private final InitProperties initProperties;
 
     @Override
     public List<String> updateOperate() {
         // 获取数据库表名称
-        List<String> tables = dbMapper.getTables();
+        List<String> tables = mysqlMapper.getTables();
         // 扫描指定包路径下的注解类
         Set<Class<?>> classes = ClassUtil.scanPackageByAnnotation(initProperties.getEntityPackage(), Table.class);
         // 数据库表 不包含 Table注解的类
@@ -109,9 +110,9 @@ public class MySqlOperate implements DdlAutoOperate {
             Table table = clazz.getAnnotation(Table.class);
             String tableName = this.getTableValue(table.value(), clazz);
             // 获取数据库字段名
-            List<String> dbColumns = dbMapper.getColumns(tableName);
+            List<String> dbColumns = mysqlMapper.getColumns(tableName);
             // 获取数据库索引名
-            List<String> dbIndexes = dbMapper.getIndexes(tableName).stream().map(DbIndex::getKeyName).collect(Collectors.toList());
+            List<String> dbIndexes = mysqlMapper.getIndexes(tableName).stream().map(DbIndex::getKeyName).collect(Collectors.toList());
             // 获取clazz下所有的字段
             List<Field> fields = FieldUtil.addParentFields(clazz);
             // 添加字段
@@ -291,16 +292,15 @@ public class MySqlOperate implements DdlAutoOperate {
      * @return 删表语句
      */
     private List<String> dropTableSql(Collection<Class<?>> classes) {
-        return this.getDropTableSql(
-                classes.stream()
-                        // 包含Table注解的类
-                        .filter(clazz -> clazz.getAnnotation(Table.class) != null)
-                        .map(clazz -> {
-                            Table table = clazz.getAnnotation(Table.class);
-                            return this.getTableValue(table.value(), clazz);
-                        })
-                        .collect(Collectors.toList())
-        );
+        return classes.stream()
+                // 包含Table注解的类
+                .filter(clazz -> clazz.getAnnotation(Table.class) != null)
+                .map(clazz -> {
+                    Table table = clazz.getAnnotation(Table.class);
+                    String tableName = this.getTableValue(table.value(), clazz);
+                    return String.format(StatementConstant.DROP_TABLE, tableName);
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -362,7 +362,7 @@ public class MySqlOperate implements DdlAutoOperate {
         // 执行语句
         for (String sql : sqlList) {
             try {
-                dbMapper.run(sql);
+                mysqlMapper.run(sql);
                 log.info("\n语句: {}\n执行成功", sql);
             } catch (Exception e) {
                 log.error("\n语句: {}\n执行失败原因: {}", sql, e.getCause().getMessage());

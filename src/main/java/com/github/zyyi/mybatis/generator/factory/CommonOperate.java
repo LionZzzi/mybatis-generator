@@ -24,18 +24,6 @@ public interface CommonOperate {
     void destroy();
 
     /**
-     * 获取通用删表语句
-     *
-     * @param tableNames 表名集合
-     * @return sql语句集合
-     */
-    default List<String> getDropTableSql(List<String> tableNames) {
-        return tableNames.stream()
-                .map(tableName -> String.format(StatementConstant.DROP_TABLE, tableName))
-                .collect(Collectors.toList());
-    }
-
-    /**
      * 获取通用新增字段,索引语句
      *
      * @param tableName 表名
