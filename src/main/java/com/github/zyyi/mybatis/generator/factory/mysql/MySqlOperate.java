@@ -45,11 +45,11 @@ public class MySqlOperate implements DdlAutoOperate {
         // 扫描指定包路径下的注解类
         Set<Class<?>> classes = ClassUtil.scanPackageByAnnotation(initProperties.getEntityPackage(), Table.class);
         // 数据库表 不包含 Table注解的类
-        Collection<Class<?>> excludeTableClass = this.getPointClass(tables, classes, false);
+        Collection<Class<?>> excludeTableClass = baseOperate.getPointClass(tables, classes, false);
         // 建表语句
         List<String> createTableSql = this.createTableSql(excludeTableClass);
         // 数据库表 包含 Table注解的类
-        Collection<Class<?>> includeTableClass = this.getPointClass(tables, classes, true);
+        Collection<Class<?>> includeTableClass = baseOperate.getPointClass(tables, classes, true);
         // 新增字段,索引语句
         List<String> addColumnSql = this.addColumnOrIndexSql(includeTableClass);
         return Stream.of(createTableSql, addColumnSql).flatMap(Collection::stream).collect(Collectors.toList());
@@ -82,25 +82,6 @@ public class MySqlOperate implements DdlAutoOperate {
     }
 
     /**
-     * 获取指定的类
-     *
-     * @param tables  数据库表名集合
-     * @param classes 指定包路径下的类
-     * @param value   过滤条件
-     * @return 指定的类
-     */
-    private Collection<Class<?>> getPointClass(List<String> tables, Collection<Class<?>> classes, boolean value) {
-        Map<Boolean, List<Class<?>>> map = classes.stream()
-                .collect(
-                        Collectors.groupingBy(clazz -> {
-                            Table table = clazz.getAnnotation(Table.class);
-                            return tables.contains(baseOperate.getTableValue(table.value(), clazz));
-                        })
-                );
-        return Optional.ofNullable(map.get(value)).orElse(new ArrayList<>());
-    }
-
-    /**
      * SQL建表语句
      *
      * @param classes 需要生成的类
@@ -114,7 +95,7 @@ public class MySqlOperate implements DdlAutoOperate {
             // 添加父类字段
             List<Field> fields = FieldUtil.addParentFields(clazz).stream()
                     // 过滤 不包含Column 的字段
-                    .filter(field -> field.getAnnotation(Column.class) != null)
+                    .filter(field -> field.isAnnotationPresent(Column.class))
                     // 将主键字段置顶
                     .sorted(Comparator.comparing(field -> !field.getAnnotation(Column.class).primaryKey()))
                     .collect(Collectors.toList());

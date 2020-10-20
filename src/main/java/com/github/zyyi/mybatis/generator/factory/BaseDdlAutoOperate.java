@@ -6,7 +6,7 @@ package com.github.zyyi.mybatis.generator.factory;
  * @author Zyyi
  * @since 2020/10/15 5:35 下午
  */
-public interface CommonOperate {
+public interface BaseDdlAutoOperate {
 
     /**
      * 执行

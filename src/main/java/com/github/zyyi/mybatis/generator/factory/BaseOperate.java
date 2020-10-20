@@ -1,5 +1,6 @@
 package com.github.zyyi.mybatis.generator.factory;
 
+import com.github.zyyi.mybatis.generator.annotation.Table;
 import com.github.zyyi.mybatis.generator.constant.StatementConstant;
 import com.github.zyyi.mybatis.generator.dao.CommonMapper;
 import com.github.zyyi.mybatis.generator.util.StringUtil;
@@ -9,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Eric
@@ -32,6 +34,25 @@ public class BaseOperate {
                 log.error("\n语句: {}\n执行失败原因: {}", sql, e.getCause().getMessage());
             }
         }
+    }
+
+    /**
+     * 获取指定的类
+     *
+     * @param tables  数据库表名集合
+     * @param classes 指定包路径下的类
+     * @param value   过滤条件
+     * @return 指定的类
+     */
+    public Collection<Class<?>> getPointClass(List<String> tables, Collection<Class<?>> classes, boolean value) {
+        Map<Boolean, List<Class<?>>> map = classes.stream()
+                .collect(
+                        Collectors.groupingBy(clazz -> {
+                            Table table = clazz.getAnnotation(Table.class);
+                            return tables.contains(this.getTableValue(table.value(), clazz));
+                        })
+                );
+        return Optional.ofNullable(map.get(value)).orElse(new ArrayList<>());
     }
 
     /**

@@ -11,7 +11,7 @@ import java.util.List;
  * @author Zyyi
  * @since 2020/10/15 5:35 下午
  */
-public interface DdlAutoOperate extends CommonOperate {
+public interface DdlAutoOperate extends BaseDdlAutoOperate {
 
     /**
      * update 操作
