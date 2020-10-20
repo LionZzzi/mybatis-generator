@@ -9,7 +9,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum ColumnTypeEnum {
+public enum ColumnType {
     MYSQL_BIGINT("bigint"),
     MYSQL_BINARY("binary"),
     MYSQL_BIT("bit"),

@@ -1,8 +1,8 @@
 package com.github.zyyi.mybatis.generator.annotation;
 
 
-import com.github.zyyi.mybatis.generator.enums.IndexMethodEnum;
-import com.github.zyyi.mybatis.generator.enums.IndexTypeEnum;
+import com.github.zyyi.mybatis.generator.enums.IndexMethod;
+import com.github.zyyi.mybatis.generator.enums.IndexType;
 
 import java.lang.annotation.*;
 
@@ -27,12 +27,12 @@ public @interface Index {
      * 当索引类型为 FULLTEXT, 索引方法只能为空
      * 当索引类型为 SPATIAL, 索引方法只能为空 且 字段类型只能为GEOMETRY或GEOMETRYCOLLECTION
      */
-    IndexTypeEnum type() default IndexTypeEnum.MYSQL_NORMAL;
+    IndexType type() default IndexType.MYSQL_NORMAL;
 
     /**
      * 索引方法
      */
-    IndexMethodEnum method() default IndexMethodEnum.MYSQL_BTREE;
+    IndexMethod method() default IndexMethod.MYSQL_BTREE;
 
     /**
      * 备注

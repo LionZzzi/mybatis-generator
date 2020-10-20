@@ -9,12 +9,11 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum IndexTypeEnum {
+public enum IndexMethod {
 
-    MYSQL_NORMAL("INDEX"),
-    MYSQL_SPATIAL("SPATIAL"),
-    MYSQL_UNIQUE("UNIQUE"),
-    MYSQL_FULLTEXT("FULLTEXT");
+    MYSQL_NULL(""),
+    MYSQL_BTREE("USING BTREE"),
+    MYSQL_HASH("USING HASH");
 
     private final String value;
 }

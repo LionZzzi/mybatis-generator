@@ -1,7 +1,7 @@
 package com.github.zyyi.mybatis.generator.annotation;
 
 
-import com.github.zyyi.mybatis.generator.enums.ColumnTypeEnum;
+import com.github.zyyi.mybatis.generator.enums.ColumnType;
 
 import java.lang.annotation.*;
 
@@ -23,7 +23,7 @@ public @interface Column {
     /**
      * 类型
      */
-    ColumnTypeEnum type() default ColumnTypeEnum.MYSQL_VARCHAR;
+    ColumnType type() default ColumnType.MYSQL_VARCHAR;
 
     /**
      * 长度
