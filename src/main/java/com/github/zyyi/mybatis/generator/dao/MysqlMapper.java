@@ -10,7 +10,7 @@ import java.util.List;
  * @author Zyyi
  * @since 2020/10/8 9:51 上午
  */
-public interface MysqlMapper extends CommonMapper {
+public interface MysqlMapper {
 
     /**
      * 获取当前数据库
