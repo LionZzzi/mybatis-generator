@@ -3,6 +3,8 @@ package com.github.zyyi.mybatis.generator.operate;
 import com.github.zyyi.mybatis.generator.annotation.Table;
 import com.github.zyyi.mybatis.generator.constant.StatementConstant;
 import com.github.zyyi.mybatis.generator.dao.CommonMapper;
+import com.github.zyyi.mybatis.generator.enums.DbType;
+import com.github.zyyi.mybatis.generator.enums.TransformType;
 import com.github.zyyi.mybatis.generator.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -103,4 +105,33 @@ public class BaseOperate {
     public String getIndexValue(String indexValue, Field field) {
         return StringUtil.isEmpty(indexValue) ? String.format(StatementConstant.INDEX_PREFIX_NAME, StringUtil.toCamelCase(field.getName())) : indexValue;
     }
+
+    /**
+     * 获取字段类型
+     *
+     * @param dbType     数据库类型
+     * @param columnType 字段类型
+     * @param field      实体字段
+     * @return 字段类型
+     */
+    public String getColumnType(DbType dbType, String columnType, Field field) {
+        if (StringUtil.isNotEmpty(columnType)) {
+            return columnType;
+        }
+        return TransformType.getValue(dbType, field.getType().getSimpleName());
+    }
+
+    /**
+     * 获取字段默认长度
+     *
+     * @param dbType     数据库类型
+     * @param columnType 字段类型
+     * @return 获取字段默认长度
+     */
+//    public String getColumnLength(DbType dbType, String columnType) {
+//        if (StringUtil.isNotEmpty(columnType)) {
+//            return columnType;
+//        }
+//        return TransformType.getValue(dbType, field.getType().getSimpleName());
+//    }
 }

@@ -12,6 +12,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ColumnType {
+
+    EMPTY(""),
     MYSQL_BIGINT("bigint"),
     MYSQL_BINARY("binary"),
     MYSQL_BIT("bit"),

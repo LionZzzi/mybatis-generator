@@ -149,6 +149,7 @@ public class MySqlOperate implements DdlAutoOperate {
         List<String> columnSql = new ArrayList<>();
         for (Field field : fields) {
             Column column = field.getAnnotation(Column.class);
+            String columnType = baseOperate.getColumnType(initProperties.getDbType(), column.type().getValue(), field);
             // 拼接字段
             columnSql.add(
                     String.format(
@@ -156,7 +157,7 @@ public class MySqlOperate implements DdlAutoOperate {
                             // 字段名称
                             baseOperate.getColumnValue(column.value(), field),
                             // 字段类型
-                            column.type().getValue(),
+                            columnType,
                             // 字段长度
                             column.length(),
                             // 字段非空

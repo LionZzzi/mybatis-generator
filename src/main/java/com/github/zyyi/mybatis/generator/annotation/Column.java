@@ -23,7 +23,7 @@ public @interface Column {
     /**
      * 类型
      */
-    ColumnType type() default ColumnType.MYSQL_VARCHAR;
+    ColumnType type() default ColumnType.EMPTY;
 
     /**
      * 长度
