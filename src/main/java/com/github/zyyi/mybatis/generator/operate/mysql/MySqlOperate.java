@@ -3,7 +3,6 @@ package com.github.zyyi.mybatis.generator.operate.mysql;
 import com.github.zyyi.mybatis.generator.annotation.Column;
 import com.github.zyyi.mybatis.generator.annotation.Index;
 import com.github.zyyi.mybatis.generator.annotation.Table;
-import com.github.zyyi.mybatis.generator.constant.DdlAutoConstant;
 import com.github.zyyi.mybatis.generator.constant.StatementConstant;
 import com.github.zyyi.mybatis.generator.dao.MysqlMapper;
 import com.github.zyyi.mybatis.generator.entity.DbIndex;
@@ -73,13 +72,16 @@ public class MySqlOperate implements DdlAutoOperate {
     }
 
     @Override
+    public void noneOperate() {
+        log.info("不进行操作");
+    }
+
+    @Override
     public void destroy() {
-        if (DdlAutoConstant.CREATE_DROP.equals(initProperties.getDdlAuto())) {
-            // 扫描指定包路径下的注解类
-            Set<Class<?>> classes = ClassUtil.scanPackageByAnnotation(initProperties.getEntityPackage(), Table.class);
-            List<String> dropSql = this.dropTableSql(classes);
-            baseOperate.run(dropSql);
-        }
+        // 扫描指定包路径下的注解类
+        Set<Class<?>> classes = ClassUtil.scanPackageByAnnotation(initProperties.getEntityPackage(), Table.class);
+        List<String> dropSql = this.dropTableSql(classes);
+        baseOperate.run(dropSql);
     }
 
     /**

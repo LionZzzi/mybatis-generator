@@ -1,5 +1,7 @@
 package com.github.zyyi.mybatis.generator.property;
 
+import com.github.zyyi.mybatis.generator.enums.DbType;
+import com.github.zyyi.mybatis.generator.enums.DdlAuto;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +21,12 @@ public class InitProperties {
      * update 启动项目后进行更新操作
      * none 不进行操作
      */
-    private String ddlAuto = "none";
+    private DdlAuto ddlAuto = DdlAuto.NONE;
 
     /**
      * 数据库类型
      */
-    private String dbType = "mysql";
+    private DbType dbType = DbType.MYSQL;
 
     /**
      * 扫描指定路径下的实体类,包含底下目录

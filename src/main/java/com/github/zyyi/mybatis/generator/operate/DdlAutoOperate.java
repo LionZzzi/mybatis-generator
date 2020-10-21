@@ -1,6 +1,6 @@
 package com.github.zyyi.mybatis.generator.operate;
 
-import com.github.zyyi.mybatis.generator.constant.DdlAutoConstant;
+import com.github.zyyi.mybatis.generator.enums.DdlAuto;
 
 /**
  * 对应ddl-auto操作
@@ -26,6 +26,11 @@ public interface DdlAutoOperate {
     void strictOperate();
 
     /**
+     * none 操作
+     */
+    void noneOperate();
+
+    /**
      * 销毁
      */
     void destroy();
@@ -35,17 +40,20 @@ public interface DdlAutoOperate {
      *
      * @param ddlAuto ddl-auto值
      */
-    default void run(String ddlAuto) {
+    default void run(DdlAuto ddlAuto) {
         switch (ddlAuto) {
-            case DdlAutoConstant.UPDATE:
-                this.updateOperate();
-                break;
-            case DdlAutoConstant.CREATE:
-            case DdlAutoConstant.CREATE_DROP:
+            case CREATE:
+            case CREATE_DROP:
                 this.createOperate();
                 break;
-            case DdlAutoConstant.STRICT:
+            case UPDATE:
+                this.updateOperate();
+                break;
+            case STRICT:
                 this.strictOperate();
+                break;
+            case NONE:
+                this.noneOperate();
                 break;
             default:
                 break;
