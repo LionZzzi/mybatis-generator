@@ -2,6 +2,8 @@ package com.github.zyyi.mybatis.generator.init;
 
 import com.github.zyyi.mybatis.generator.enums.DdlAuto;
 import com.github.zyyi.mybatis.generator.operate.mysql.MySqlOperate;
+import com.github.zyyi.mybatis.generator.operate.oracle.OracleOperate;
+import com.github.zyyi.mybatis.generator.operate.sqlserver.SqlServerOperate;
 import com.github.zyyi.mybatis.generator.property.InitProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +24,20 @@ public class Init {
 
     private final InitProperties initProperties;
     private final MySqlOperate mySqlOperate;
+    private final SqlServerOperate sqlServerOperate;
+    private final OracleOperate oracleOperate;
 
     @PostConstruct
     public void init() {
         switch (initProperties.getDbType()) {
             case MYSQL:
-                log.info("===== 执行mysql操作 =====");
                 mySqlOperate.run(initProperties.getDdlAuto());
                 break;
             case ORACLE:
+                oracleOperate.run(initProperties.getDdlAuto());
                 break;
             case SQLSERVER:
+                sqlServerOperate.run(initProperties.getDdlAuto());
                 break;
             default:
                 break;
@@ -48,8 +53,10 @@ public class Init {
                     mySqlOperate.destroy();
                     break;
                 case ORACLE:
+                    oracleOperate.destroy();
                     break;
                 case SQLSERVER:
+                    sqlServerOperate.destroy();
                     break;
                 default:
                     break;

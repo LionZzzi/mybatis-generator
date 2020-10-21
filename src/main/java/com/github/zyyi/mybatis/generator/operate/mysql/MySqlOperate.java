@@ -43,11 +43,11 @@ public class MySqlOperate implements DdlAutoOperate {
         List<String> tables = mysqlMapper.getTables();
         // 扫描指定包路径下的注解类
         Set<Class<?>> classes = ClassUtil.scanPackageByAnnotation(initProperties.getEntityPackage(), Table.class);
-        // 数据库表 不包含 Table注解的类
+        // 数据库表中不包含Table注解value的类
         Collection<Class<?>> excludeTableClass = baseOperate.getPointClass(tables, classes, false);
         // 建表语句
         List<String> createTableSql = this.createTableSql(excludeTableClass);
-        // 数据库表 包含 Table注解的类
+        // 数据库表中包含Table注解value的类
         Collection<Class<?>> includeTableClass = baseOperate.getPointClass(tables, classes, true);
         // 新增字段,索引语句
         List<String> alterColumnOrIndexSql = this.alterColumnOrIndexSql(includeTableClass);
