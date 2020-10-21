@@ -50,8 +50,8 @@ public class MySqlOperate implements DdlAutoOperate {
         // 数据库表 包含 Table注解的类
         Collection<Class<?>> includeTableClass = baseOperate.getPointClass(tables, classes, true);
         // 新增字段,索引语句
-        List<String> addColumnSql = this.alterColumnOrIndexSql(includeTableClass);
-        List<String> sqlList = Stream.of(createTableSql, addColumnSql).flatMap(Collection::stream).collect(Collectors.toList());
+        List<String> alterColumnOrIndexSql = this.alterColumnOrIndexSql(includeTableClass);
+        List<String> sqlList = Stream.of(createTableSql, alterColumnOrIndexSql).flatMap(Collection::stream).collect(Collectors.toList());
         baseOperate.run(sqlList);
     }
 
@@ -73,7 +73,7 @@ public class MySqlOperate implements DdlAutoOperate {
 
     @Override
     public void noneOperate() {
-        log.info("不进行操作");
+
     }
 
     @Override
@@ -239,7 +239,7 @@ public class MySqlOperate implements DdlAutoOperate {
      * @return 新增语句
      */
     private List<String> alterColumnOrIndexSql(Collection<Class<?>> classes) {
-        List<String> addColumnSql = new ArrayList<>();
+        List<String> alterColumnOrIndexSql = new ArrayList<>();
         for (Class<?> clazz : classes) {
             Table table = clazz.getAnnotation(Table.class);
             String tableName = baseOperate.getTableValue(table.value(), clazz);
@@ -248,19 +248,17 @@ public class MySqlOperate implements DdlAutoOperate {
             // 获取数据库索引名
             List<String> dbIndexes = mysqlMapper.getIndexes(tableName).stream().map(DbIndex::getKeyName).collect(Collectors.toList());
             // 获取clazz下所有的字段
-            List<Field> fields = FieldUtil.addParentFields(clazz);
+            List<Field> fields = FieldUtil.addParentFields(clazz).stream()
+                    .filter(field -> field.isAnnotationPresent(Column.class))
+                    .collect(Collectors.toList());
             // 添加字段
-            addColumnSql.addAll(
+            alterColumnOrIndexSql.addAll(
                     // 获取字段sql
                     this.columnSql(
                             // 获取当前类的全部字段
                             fields.stream()
-                                    // 获取包含Column的注解且不存在于数据库的字段
-                                    .filter(field -> {
-                                        Column column = field.getAnnotation(Column.class);
-                                        return column != null
-                                                && !dbColumns.contains(baseOperate.getColumnValue(column.value(), field));
-                                    })
+                                    // 不存在于数据库的字段
+                                    .filter(field -> !dbColumns.contains(baseOperate.getColumnValue(field.getAnnotation(Column.class).value(), field)))
                                     .collect(Collectors.toList())
                     )
                             .stream()
@@ -268,7 +266,7 @@ public class MySqlOperate implements DdlAutoOperate {
                             .collect(Collectors.toList())
             );
             // 添加索引
-            addColumnSql.addAll(
+            alterColumnOrIndexSql.addAll(
                     // 获取索引sql
                     this.indexSql(
                             // 获取当前类的全部字段
@@ -287,6 +285,6 @@ public class MySqlOperate implements DdlAutoOperate {
 
             );
         }
-        return addColumnSql;
+        return alterColumnOrIndexSql;
     }
 }

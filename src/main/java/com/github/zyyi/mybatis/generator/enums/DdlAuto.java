@@ -10,9 +10,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum DdlAuto {
+
     UPDATE,
     CREATE,
     CREATE_DROP,
     STRICT,
     NONE
+
 }

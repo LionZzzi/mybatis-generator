@@ -10,7 +10,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum DbType {
+
     MYSQL,
     ORACLE,
     SQLSERVER
+
 }
