@@ -1,4 +1,4 @@
-package com.github.zyyi.mybatis.generator.factory;
+package com.github.zyyi.mybatis.generator.operate;
 
 import com.github.zyyi.mybatis.generator.annotation.Table;
 import com.github.zyyi.mybatis.generator.constant.StatementConstant;
@@ -24,6 +24,11 @@ public class BaseOperate {
 
     public final CommonMapper commonMapper;
 
+    /**
+     * 执行sql语句
+     *
+     * @param sqlList sql集合
+     */
     public void run(List<String> sqlList) {
         // 执行语句
         for (String sql : sqlList) {

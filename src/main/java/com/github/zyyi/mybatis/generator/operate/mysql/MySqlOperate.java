@@ -1,4 +1,4 @@
-package com.github.zyyi.mybatis.generator.factory.mysql;
+package com.github.zyyi.mybatis.generator.operate.mysql;
 
 import com.github.zyyi.mybatis.generator.annotation.Column;
 import com.github.zyyi.mybatis.generator.annotation.Index;
@@ -7,8 +7,8 @@ import com.github.zyyi.mybatis.generator.constant.DdlAutoConstant;
 import com.github.zyyi.mybatis.generator.constant.StatementConstant;
 import com.github.zyyi.mybatis.generator.dao.MysqlMapper;
 import com.github.zyyi.mybatis.generator.entity.DbIndex;
-import com.github.zyyi.mybatis.generator.factory.BaseOperate;
-import com.github.zyyi.mybatis.generator.factory.DdlAutoOperate;
+import com.github.zyyi.mybatis.generator.operate.BaseOperate;
+import com.github.zyyi.mybatis.generator.operate.DdlAutoOperate;
 import com.github.zyyi.mybatis.generator.property.InitProperties;
 import com.github.zyyi.mybatis.generator.util.ClassUtil;
 import com.github.zyyi.mybatis.generator.util.FieldUtil;
@@ -39,7 +39,7 @@ public class MySqlOperate implements DdlAutoOperate {
     private final BaseOperate baseOperate;
 
     @Override
-    public List<String> updateOperate() {
+    public void updateOperate() {
         // 获取数据库表名称
         List<String> tables = mysqlMapper.getTables();
         // 扫描指定包路径下的注解类
@@ -51,24 +51,25 @@ public class MySqlOperate implements DdlAutoOperate {
         // 数据库表 包含 Table注解的类
         Collection<Class<?>> includeTableClass = baseOperate.getPointClass(tables, classes, true);
         // 新增字段,索引语句
-        List<String> addColumnSql = this.addColumnOrIndexSql(includeTableClass);
-        return Stream.of(createTableSql, addColumnSql).flatMap(Collection::stream).collect(Collectors.toList());
+        List<String> addColumnSql = this.alterColumnOrIndexSql(includeTableClass);
+        List<String> sqlList = Stream.of(createTableSql, addColumnSql).flatMap(Collection::stream).collect(Collectors.toList());
+        baseOperate.run(sqlList);
     }
 
     @Override
-    public List<String> createOperate() {
+    public void createOperate() {
         // 扫描指定包路径下的注解类
         Set<Class<?>> classes = ClassUtil.scanPackageByAnnotation(initProperties.getEntityPackage(), Table.class);
         List<String> dropTableSql = this.dropTableSql(classes);
         // 建表语句
         List<String> createTableSql = this.createTableSql(classes);
-        return Stream.of(dropTableSql, createTableSql).flatMap(Collection::stream).collect(Collectors.toList());
+        List<String> sqlList = Stream.of(dropTableSql, createTableSql).flatMap(Collection::stream).collect(Collectors.toList());
+        baseOperate.run(sqlList);
     }
 
     @Override
-    public void run() {
-        List<String> sqlList = this.init(initProperties.getDdlAuto());
-        baseOperate.run(sqlList);
+    public void strictOperate() {
+
     }
 
     @Override
@@ -235,7 +236,7 @@ public class MySqlOperate implements DdlAutoOperate {
      * @param classes 需要新增的类
      * @return 新增语句
      */
-    private List<String> addColumnOrIndexSql(Collection<Class<?>> classes) {
+    private List<String> alterColumnOrIndexSql(Collection<Class<?>> classes) {
         List<String> addColumnSql = new ArrayList<>();
         for (Class<?> clazz : classes) {
             Table table = clazz.getAnnotation(Table.class);

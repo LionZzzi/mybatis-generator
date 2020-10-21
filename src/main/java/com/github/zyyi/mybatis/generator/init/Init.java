@@ -1,12 +1,12 @@
 package com.github.zyyi.mybatis.generator.init;
 
+import com.github.zyyi.mybatis.generator.constant.DbTypeConstant;
+import com.github.zyyi.mybatis.generator.operate.mysql.MySqlOperate;
+import com.github.zyyi.mybatis.generator.property.InitProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.github.zyyi.mybatis.generator.constant.DbTypeConstant;
-import com.github.zyyi.mybatis.generator.factory.mysql.MySqlOperate;
-import com.github.zyyi.mybatis.generator.property.InitProperties;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -18,7 +18,7 @@ import javax.annotation.PreDestroy;
 @Slf4j
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class InitOperate {
+public class Init {
 
     private final InitProperties initProperties;
     private final MySqlOperate mySqlOperate;
@@ -28,7 +28,7 @@ public class InitOperate {
         switch (initProperties.getDbType()) {
             case DbTypeConstant.MYSQL:
                 log.info("===== 执行mysql建表操作 =====");
-                mySqlOperate.run();
+                mySqlOperate.run(initProperties.getDdlAuto());
                 break;
             case DbTypeConstant.ORACLE:
                 log.info("===== 执行oracle建表操作 =====");
