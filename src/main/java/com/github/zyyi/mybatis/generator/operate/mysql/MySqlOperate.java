@@ -150,24 +150,26 @@ public class MySqlOperate implements DdlAutoOperate {
         for (Field field : fields) {
             Column column = field.getAnnotation(Column.class);
             String columnType = baseOperate.getColumnType(initProperties.getDbType(), column.type().getValue(), field);
-            // 拼接字段
-            columnSql.add(
-                    String.format(
-                            StatementConstant.COLUMN_INFO,
-                            // 字段名称
-                            baseOperate.getColumnValue(column.value(), field),
-                            // 字段类型
-                            columnType,
-                            // 字段长度
-                            column.length(),
-                            // 字段非空
-                            column.primaryKey() ? StringUtil.NOT_NULL : column.nullable() ? StringUtil.EMPTY : StringUtil.NOT_NULL,
-                            // 主键字段
-                            column.primaryKey() ? StringUtil.PRIMARY_KEY : StringUtil.EMPTY,
-                            // 字段备注
-                            column.comment()
-                    )
-            );
+            if (StringUtil.isNotEmpty(columnType)) {
+                // 拼接字段
+                columnSql.add(
+                        String.format(
+                                StatementConstant.COLUMN_INFO,
+                                // 字段名称
+                                baseOperate.getColumnValue(column.value(), field),
+                                // 字段类型
+                                columnType,
+                                // 字段长度
+                                column.length(),
+                                // 字段非空
+                                column.primaryKey() ? StringUtil.NOT_NULL : column.nullable() ? StringUtil.EMPTY : StringUtil.NOT_NULL,
+                                // 主键字段
+                                column.primaryKey() ? StringUtil.PRIMARY_KEY : StringUtil.EMPTY,
+                                // 字段备注
+                                column.comment()
+                        )
+                );
+            }
         }
         return columnSql;
     }

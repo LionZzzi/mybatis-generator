@@ -8,7 +8,7 @@ public class StatementConstant {
     /**
      * 建表语句
      */
-    public static final String CREATE_TABLE = "CREATE TABLE `%s` (%s) COMMENT='%s'";
+    public static final String CREATE_TABLE = "CREATE TABLE %s (%s) COMMENT='%s'";
 
     /**
      * 删表语句
@@ -18,7 +18,7 @@ public class StatementConstant {
     /**
      * 字段语句
      */
-    public static final String COLUMN_INFO = "`%s` %s(%s) %s %s COMMENT '%s'";
+    public static final String COLUMN_INFO = "%s %s(%s) %s %s COMMENT '%s'";
 
     /**
      * 索引名称
@@ -28,7 +28,7 @@ public class StatementConstant {
     /**
      * 索引语句
      */
-    public static final String INDEX_INFO = "%s `%s` (%s) %s COMMENT '%s'";
+    public static final String INDEX_INFO = "%s %s (%s) %s COMMENT '%s'";
 
     /**
      * 新增字段,索引 语句
@@ -38,5 +38,5 @@ public class StatementConstant {
     /**
      * 字段
      */
-    public static final String INDEX = "`%s`";
+    public static final String INDEX = "%s";
 }
