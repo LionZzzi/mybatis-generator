@@ -32,11 +32,6 @@ public class SqlServerOperate implements DdlAutoOperate {
     }
 
     @Override
-    public void noneOperate() {
-
-    }
-
-    @Override
     public void destroy() {
 
     }

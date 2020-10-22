@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * MySql 相关操作
@@ -36,6 +35,7 @@ public class MySqlOperate implements DdlAutoOperate {
     private final MysqlMapper mysqlMapper;
     private final InitProperties initProperties;
     private final BaseOperate baseOperate;
+    private final List<String> allSql = new ArrayList<>();
 
     @Override
     public void updateOperate() {
@@ -46,24 +46,22 @@ public class MySqlOperate implements DdlAutoOperate {
         // 数据库表中不包含Table注解value的类
         Collection<Class<?>> excludeTableClass = baseOperate.getPointClass(tables, classes, false);
         // 建表语句
-        List<String> createTableSql = this.createTableSql(excludeTableClass);
+        allSql.addAll(this.createTableSql(excludeTableClass));
         // 数据库表中包含Table注解value的类
         Collection<Class<?>> includeTableClass = baseOperate.getPointClass(tables, classes, true);
         // 新增字段,索引语句
-        List<String> alterColumnOrIndexSql = this.alterColumnOrIndexSql(includeTableClass);
-        List<String> sqlList = Stream.of(createTableSql, alterColumnOrIndexSql).flatMap(Collection::stream).collect(Collectors.toList());
-        baseOperate.run(sqlList);
+        allSql.addAll(this.alterColumnOrIndexSql(includeTableClass));
+        baseOperate.run(allSql);
     }
 
     @Override
     public void createOperate() {
         // 扫描指定包路径下的注解类
         Set<Class<?>> classes = ClassUtil.scanPackageByAnnotation(initProperties.getEntityPackage(), Table.class);
-        List<String> dropTableSql = this.dropTableSql(classes);
+        allSql.addAll(this.dropTableSql(classes));
         // 建表语句
-        List<String> createTableSql = this.createTableSql(classes);
-        List<String> sqlList = Stream.of(dropTableSql, createTableSql).flatMap(Collection::stream).collect(Collectors.toList());
-        baseOperate.run(sqlList);
+        allSql.addAll(this.createTableSql(classes));
+        baseOperate.run(allSql);
     }
 
     @Override
@@ -72,16 +70,11 @@ public class MySqlOperate implements DdlAutoOperate {
     }
 
     @Override
-    public void noneOperate() {
-
-    }
-
-    @Override
     public void destroy() {
         // 扫描指定包路径下的注解类
         Set<Class<?>> classes = ClassUtil.scanPackageByAnnotation(initProperties.getEntityPackage(), Table.class);
-        List<String> dropSql = this.dropTableSql(classes);
-        baseOperate.run(dropSql);
+        allSql.addAll(this.dropTableSql(classes));
+        baseOperate.run(allSql);
     }
 
     /**

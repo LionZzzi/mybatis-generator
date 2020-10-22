@@ -49,7 +49,6 @@ public class Init {
         if (initProperties.getDdlAuto() == DdlAuto.CREATE_DROP) {
             switch (initProperties.getDbType()) {
                 case MYSQL:
-                    log.info("===== 执行mysql删除操作 =====");
                     mySqlOperate.destroy();
                     break;
                 case ORACLE:

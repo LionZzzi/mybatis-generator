@@ -32,11 +32,6 @@ public class OracleOperate implements DdlAutoOperate {
     }
 
     @Override
-    public void noneOperate() {
-
-    }
-
-    @Override
     public void destroy() {
 
     }

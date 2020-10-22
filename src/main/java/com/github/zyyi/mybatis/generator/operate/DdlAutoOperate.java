@@ -28,7 +28,8 @@ public interface DdlAutoOperate {
     /**
      * none 操作
      */
-    void noneOperate();
+    default void noneOperate() {
+    }
 
     /**
      * 销毁

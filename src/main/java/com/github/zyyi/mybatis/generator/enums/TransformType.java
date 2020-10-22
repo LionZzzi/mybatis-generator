@@ -12,15 +12,16 @@ import lombok.Getter;
 public enum TransformType {
 
     // ===== MySql 字段类型转换 =====
-    MYSQL_STRING_TO_VARCHAR(DbType.MYSQL, "String", ColumnType.MYSQL_VARCHAR.getValue()),
-    MYSQL_INTEGER_TO_INT(DbType.MYSQL, "Integer", ColumnType.MYSQL_INT.getValue()),
-    MYSQL_LONG_TO_BIGINT(DbType.MYSQL, "Long", ColumnType.MYSQL_BIGINT.getValue()),
-    MYSQL_FLOAT_TO_FLOAT(DbType.MYSQL, "Float", ColumnType.MYSQL_FLOAT.getValue()),
-    MYSQL_DOUBLE_TO_DOUBLE(DbType.MYSQL, "Double", ColumnType.MYSQL_DOUBLE.getValue()),
-    MYSQL_BOOLEAN_TO_TINYINT(DbType.MYSQL, "Boolean", ColumnType.MYSQL_TINYINT.getValue()),
+    STRING_TO_MYSQL_VARCHAR(DbType.MYSQL, "String", ColumnType.MYSQL_VARCHAR.getValue()),
+    INTEGER_TO_MYSQL_INT(DbType.MYSQL, "Integer", ColumnType.MYSQL_INT.getValue()),
+    LONG_TO_MYSQL_BIGINT(DbType.MYSQL, "Long", ColumnType.MYSQL_BIGINT.getValue()),
+    FLOAT_TO_MYSQL_FLOAT(DbType.MYSQL, "Float", ColumnType.MYSQL_FLOAT.getValue()),
+    DOUBLE_TO_MYSQL_DOUBLE(DbType.MYSQL, "Double", ColumnType.MYSQL_DOUBLE.getValue()),
+    BOOLEAN_TO_MYSQL_TINYINT(DbType.MYSQL, "Boolean", ColumnType.MYSQL_TINYINT.getValue()),
+    BIGDECIMAL_TO_MYSQL_DECIMAL(DbType.MYSQL, "BigDecimal", ColumnType.MYSQL_DECIMAL.getValue()),
 
     // ===== SqlServer 字段类型转换 =====
-    SQLSERVER_STRING_TO_NVARCHAR(DbType.SQLSERVER, "String", ColumnType.SQLSERVER_NVARCHAR.getValue());
+    STRING_TO_SQLSERVER_NVARCHAR(DbType.SQLSERVER, "String", ColumnType.SQLSERVER_NVARCHAR.getValue());
 
     private final DbType dbType;
     private final String key;
