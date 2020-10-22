@@ -86,6 +86,7 @@ public class MySqlOperate implements DdlAutoOperate {
     private List<String> createTableSql(Collection<Class<?>> classes) {
         List<String> tableSql = new ArrayList<>();
         for (Class<?> clazz : classes) {
+            List<String> allFieldSql = new ArrayList<>();
             // 通过类获取对应的Table注解信息
             Table table = clazz.getAnnotation(Table.class);
             // 添加父类字段
@@ -96,9 +97,9 @@ public class MySqlOperate implements DdlAutoOperate {
                     .sorted(Comparator.comparing(field -> !field.getAnnotation(Column.class).primaryKey()))
                     .collect(Collectors.toList());
             // 获取字段语句
-            List<String> columns = this.columnSql(fields);
+            allFieldSql.addAll(this.columnSql(fields));
             // 获取索引语句
-            List<String> indexes = this.indexSql(fields.stream().filter(field -> field.isAnnotationPresent(Index.class)).collect(Collectors.toList()));
+            allFieldSql.addAll(this.indexSql(fields.stream().filter(field -> field.isAnnotationPresent(Index.class)).collect(Collectors.toList())));
             tableSql.add(
                     // 拼接建表语句
                     String.format(
@@ -106,7 +107,7 @@ public class MySqlOperate implements DdlAutoOperate {
                             // 表名
                             baseOperate.getTableValue(table.value(), clazz),
                             // 字段信息
-                            String.join(StringUtil.COMMA, columns) + (indexes.isEmpty() ? StringUtil.EMPTY : (StringUtil.COMMA + String.join(StringUtil.COMMA, indexes))),
+                            String.join(StringUtil.COMMA, allFieldSql),
                             // 表备注
                             table.comment()
                     )

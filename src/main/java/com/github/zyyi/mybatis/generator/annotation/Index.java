@@ -11,7 +11,7 @@ import java.lang.annotation.*;
  * @since 2020/10/11 19:47
  */
 @Documented
-@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Index {
 
