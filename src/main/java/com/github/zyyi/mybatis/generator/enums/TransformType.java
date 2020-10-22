@@ -40,7 +40,6 @@ public enum TransformType {
                 return transformType.value;
             }
         }
-        // 对于找不到的一律返回String对应的类型
-        return getValue(dbType, "String");
+        return null;
     }
 }

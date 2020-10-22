@@ -92,7 +92,7 @@ public class BaseOperate {
      * @return 索引字段名
      */
     public String getIndexColumnValue(String columnValue, Field field) {
-        return String.format(StatementConstant.INDEX, StringUtil.isEmpty(columnValue) ? StringUtil.toCamelCase(field.getName()) : columnValue);
+        return StringUtil.isEmpty(columnValue) ? StringUtil.toCamelCase(field.getName()) : columnValue;
     }
 
     /**
@@ -120,18 +120,4 @@ public class BaseOperate {
         }
         return TransformType.getValue(dbType, field.getType().getSimpleName());
     }
-
-    /**
-     * 获取字段默认长度
-     *
-     * @param dbType     数据库类型
-     * @param columnType 字段类型
-     * @return 获取字段默认长度
-     */
-//    public String getColumnLength(DbType dbType, String columnType) {
-//        if (StringUtil.isNotEmpty(columnType)) {
-//            return columnType;
-//        }
-//        return TransformType.getValue(dbType, field.getType().getSimpleName());
-//    }
 }

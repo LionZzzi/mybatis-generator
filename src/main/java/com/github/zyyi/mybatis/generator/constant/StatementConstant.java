@@ -34,9 +34,4 @@ public class StatementConstant {
      * 新增字段,索引 语句
      */
     public static final String ADD_COLUMN_OR_INDEX = "ALTER TABLE %s ADD %s";
-
-    /**
-     * 字段
-     */
-    public static final String INDEX = "%s";
 }
