@@ -144,13 +144,14 @@ public class MySqlOperate implements DdlAutoOperate {
         for (Field field : fields) {
             Column column = field.getAnnotation(Column.class);
             String columnType = baseOperate.getColumnType(initProperties.getDbType(), column.type().getValue(), field);
+            String columnValue = baseOperate.getColumnValue(column.value(), field);
             if (StringUtil.isNotEmpty(columnType)) {
                 // 拼接字段
                 columnSql.add(
                         String.format(
                                 MySqlStatementConstant.COLUMN_INFO,
                                 // 字段名称
-                                baseOperate.getColumnValue(column.value(), field),
+                                columnValue,
                                 // 字段类型
                                 columnType,
                                 // 字段长度
@@ -163,6 +164,8 @@ public class MySqlOperate implements DdlAutoOperate {
                                 column.comment()
                         )
                 );
+            } else {
+                log.warn("无法识别字段:{}对应数据库的默认类型,请手动指定@Column的type", columnValue);
             }
         }
         return columnSql;
