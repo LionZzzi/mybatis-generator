@@ -3,7 +3,7 @@ package com.github.zyyi.mybatis.generator.operate.mysql;
 import com.github.zyyi.mybatis.generator.annotation.Column;
 import com.github.zyyi.mybatis.generator.annotation.Index;
 import com.github.zyyi.mybatis.generator.annotation.Table;
-import com.github.zyyi.mybatis.generator.constant.StatementConstant;
+import com.github.zyyi.mybatis.generator.constant.MySqlStatementConstant;
 import com.github.zyyi.mybatis.generator.dao.MysqlMapper;
 import com.github.zyyi.mybatis.generator.entity.DbIndex;
 import com.github.zyyi.mybatis.generator.operate.BaseOperate;
@@ -91,7 +91,7 @@ public class MySqlOperate implements DdlAutoOperate {
             Table table = clazz.getAnnotation(Table.class);
             // 添加父类字段
             List<Field> fields = FieldUtil.addParentFields(clazz).stream()
-                    // 过滤 不包含Column 的字段
+                    // 过滤掉不包含Column 的字段
                     .filter(field -> field.isAnnotationPresent(Column.class))
                     // 将主键字段置顶
                     .sorted(Comparator.comparing(field -> !field.getAnnotation(Column.class).primaryKey()))
@@ -103,7 +103,7 @@ public class MySqlOperate implements DdlAutoOperate {
             tableSql.add(
                     // 拼接建表语句
                     String.format(
-                            StatementConstant.CREATE_TABLE,
+                            MySqlStatementConstant.CREATE_TABLE,
                             // 表名
                             baseOperate.getTableValue(table.value(), clazz),
                             // 字段信息
@@ -127,7 +127,7 @@ public class MySqlOperate implements DdlAutoOperate {
                 .map(clazz -> {
                     Table table = clazz.getAnnotation(Table.class);
                     String tableName = baseOperate.getTableValue(table.value(), clazz);
-                    return String.format(StatementConstant.DROP_TABLE, tableName);
+                    return String.format(MySqlStatementConstant.DROP_TABLE, tableName);
                 })
                 .collect(Collectors.toList());
     }
@@ -148,7 +148,7 @@ public class MySqlOperate implements DdlAutoOperate {
                 // 拼接字段
                 columnSql.add(
                         String.format(
-                                StatementConstant.COLUMN_INFO,
+                                MySqlStatementConstant.COLUMN_INFO,
                                 // 字段名称
                                 baseOperate.getColumnValue(column.value(), field),
                                 // 字段类型
@@ -189,7 +189,7 @@ public class MySqlOperate implements DdlAutoOperate {
                             Index index = field.getAnnotation(Index.class);
                             indexSql.add(
                                     String.format(
-                                            StatementConstant.INDEX_INFO,
+                                            MySqlStatementConstant.INDEX_INFO,
                                             // 索引类型
                                             index.type().getValue(),
                                             // 索引名称
@@ -210,7 +210,7 @@ public class MySqlOperate implements DdlAutoOperate {
                             Index index = field.get().getAnnotation(Index.class);
                             indexSql.add(
                                     String.format(
-                                            StatementConstant.INDEX_INFO,
+                                            MySqlStatementConstant.INDEX_INFO,
                                             // 索引类型
                                             index.type().getValue(),
                                             // 索引名称
@@ -259,7 +259,7 @@ public class MySqlOperate implements DdlAutoOperate {
                                     .collect(Collectors.toList())
                     )
                             .stream()
-                            .map(sql -> String.format(StatementConstant.ADD_COLUMN_OR_INDEX, tableName, sql))
+                            .map(sql -> String.format(MySqlStatementConstant.ADD_COLUMN_OR_INDEX, tableName, sql))
                             .collect(Collectors.toList())
             );
             // 添加索引
@@ -277,7 +277,7 @@ public class MySqlOperate implements DdlAutoOperate {
                                     .collect(Collectors.toList())
                     )
                             .stream()
-                            .map(sql -> String.format(StatementConstant.ADD_COLUMN_OR_INDEX, tableName, sql))
+                            .map(sql -> String.format(MySqlStatementConstant.ADD_COLUMN_OR_INDEX, tableName, sql))
                             .collect(Collectors.toList())
 
             );

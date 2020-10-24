@@ -14,6 +14,8 @@ public class StringUtil {
     public static final String EMPTY = "";
     public static final String COMMA = ",";
     public static final String LINE = "_";
+    public static final String LEFT_BRACKET = "(";
+    public static final String RIGHT_BRACKET = ")";
     private static final Pattern PATTERN = Pattern.compile("[A-Z]");
 
     /**

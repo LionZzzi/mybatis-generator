@@ -21,7 +21,13 @@ public enum TransformType {
     BIGDECIMAL_TO_MYSQL_DECIMAL(DbType.MYSQL, "BigDecimal", ColumnType.MYSQL_DECIMAL.getValue()),
 
     // ===== SqlServer 字段类型转换 =====
-    STRING_TO_SQLSERVER_NVARCHAR(DbType.SQLSERVER, "String", ColumnType.SQLSERVER_NVARCHAR.getValue());
+    STRING_TO_SQLSERVER_NVARCHAR(DbType.SQLSERVER, "String", ColumnType.SQLSERVER_NVARCHAR.getValue()),
+    INTEGER_TO_SQLSERVER_INT(DbType.MYSQL, "Integer", ColumnType.SQLSERVER_INT.getValue()),
+    LONG_TO_SQLSERVER_BIGINT(DbType.MYSQL, "Long", ColumnType.SQLSERVER_BIGINT.getValue()),
+    FLOAT_TO_SQLSERVER_FLOAT(DbType.MYSQL, "Float", ColumnType.SQLSERVER_FLOAT.getValue()),
+    DOUBLE_TO_SQLSERVER_DOUBLE(DbType.MYSQL, "Double", ColumnType.SQLSERVER_DECIMAL.getValue()),
+    BOOLEAN_TO_SQLSERVER_TINYINT(DbType.MYSQL, "Boolean", ColumnType.SQLSERVER_TINYINT.getValue()),
+    BIGDECIMAL_TO_SQLSERVER_DECIMAL(DbType.MYSQL, "BigDecimal", ColumnType.SQLSERVER_DECIMAL.getValue());
 
     private final DbType dbType;
     private final String key;

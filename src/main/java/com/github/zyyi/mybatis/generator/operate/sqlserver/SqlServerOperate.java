@@ -1,21 +1,23 @@
 package com.github.zyyi.mybatis.generator.operate.sqlserver;
 
+import com.github.zyyi.mybatis.generator.annotation.Column;
 import com.github.zyyi.mybatis.generator.annotation.Table;
+import com.github.zyyi.mybatis.generator.constant.SqlServerStatementConstant;
 import com.github.zyyi.mybatis.generator.dao.SqlServerMapper;
 import com.github.zyyi.mybatis.generator.operate.BaseOperate;
 import com.github.zyyi.mybatis.generator.operate.DdlAutoOperate;
 import com.github.zyyi.mybatis.generator.property.InitProperties;
 import com.github.zyyi.mybatis.generator.util.ClassUtil;
+import com.github.zyyi.mybatis.generator.util.FieldUtil;
+import com.github.zyyi.mybatis.generator.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * SqlServer 相关操作
@@ -32,6 +34,7 @@ public class SqlServerOperate implements DdlAutoOperate {
     private final InitProperties initProperties;
     private final BaseOperate baseOperate;
     private final List<String> allSql = new ArrayList<>();
+    private final List<String> columnFilter = Arrays.asList("int", "bit");
 
     @Override
     public void updateOperate() {
@@ -72,7 +75,29 @@ public class SqlServerOperate implements DdlAutoOperate {
      * @return 建表语句
      */
     private List<String> createTableSql(Collection<Class<?>> classes) {
-        return new ArrayList<>();
+        List<String> tableSql = new ArrayList<>();
+        for (Class<?> clazz : classes) {
+            // 通过类获取对应的Table注解信息
+            Table table = clazz.getAnnotation(Table.class);
+            // 添加父类字段
+            List<Field> fields = FieldUtil.addParentFields(clazz).stream()
+                    // 过滤掉不包含Column 的字段
+                    .filter(field -> field.isAnnotationPresent(Column.class))
+                    // 将主键字段置顶
+                    .sorted(Comparator.comparing(field -> !field.getAnnotation(Column.class).primaryKey()))
+                    .collect(Collectors.toList());
+            tableSql.add(
+                    // 拼接建表语句
+                    String.format(
+                            SqlServerStatementConstant.CREATE_TABLE,
+                            // 表名
+                            baseOperate.getTableValue(table.value(), clazz),
+                            // 字段信息
+                            String.join(StringUtil.COMMA, this.columnSql(fields))
+                    )
+            );
+        }
+        return tableSql;
     }
 
     /**
@@ -82,7 +107,31 @@ public class SqlServerOperate implements DdlAutoOperate {
      * @return 字段语句
      */
     private List<String> columnSql(List<Field> fields) {
-        return new ArrayList<>();
+        // 字段集合
+        List<String> columnSql = new ArrayList<>();
+        for (Field field : fields) {
+            Column column = field.getAnnotation(Column.class);
+            String columnType = baseOperate.getColumnType(initProperties.getDbType(), column.type().getValue(), field);
+            if (StringUtil.isNotEmpty(columnType)) {
+                // 拼接字段
+                columnSql.add(
+                        String.format(
+                                SqlServerStatementConstant.COLUMN_INFO,
+                                // 字段名称
+                                baseOperate.getColumnValue(column.value(), field),
+                                // 字段类型
+                                columnType,
+                                // 字段长度
+                                columnFilter.contains(columnType) ? StringUtil.EMPTY : StringUtil.LEFT_BRACKET + column.length() + StringUtil.RIGHT_BRACKET,
+                                // 字段非空
+                                column.primaryKey() ? StringUtil.NOT_NULL : column.nullable() ? StringUtil.EMPTY : StringUtil.NOT_NULL,
+                                // 主键字段
+                                column.primaryKey() ? StringUtil.PRIMARY_KEY : StringUtil.EMPTY
+                        )
+                );
+            }
+        }
+        return columnSql;
     }
 
     /**

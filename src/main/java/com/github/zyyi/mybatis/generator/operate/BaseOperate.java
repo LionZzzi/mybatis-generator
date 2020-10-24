@@ -1,7 +1,7 @@
 package com.github.zyyi.mybatis.generator.operate;
 
 import com.github.zyyi.mybatis.generator.annotation.Table;
-import com.github.zyyi.mybatis.generator.constant.StatementConstant;
+import com.github.zyyi.mybatis.generator.constant.MySqlStatementConstant;
 import com.github.zyyi.mybatis.generator.dao.CommonMapper;
 import com.github.zyyi.mybatis.generator.enums.DbType;
 import com.github.zyyi.mybatis.generator.enums.TransformType;
@@ -103,7 +103,7 @@ public class BaseOperate {
      * @return 索引名
      */
     public String getIndexValue(String indexValue, Field field) {
-        return StringUtil.isEmpty(indexValue) ? String.format(StatementConstant.INDEX_PREFIX_NAME, StringUtil.toCamelCase(field.getName())) : indexValue;
+        return StringUtil.isEmpty(indexValue) ? String.format(MySqlStatementConstant.INDEX_PREFIX_NAME, StringUtil.toCamelCase(field.getName())) : indexValue;
     }
 
     /**

@@ -92,7 +92,6 @@ public enum ColumnType {
     SQLSERVER_VARCHAR("varchar"),
     SQLSERVER_VARCHAR_MAX("varchar(max)"),
 
-
     EMPTY("");
     private final String value;
 }

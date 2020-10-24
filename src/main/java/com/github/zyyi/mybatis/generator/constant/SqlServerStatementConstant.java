@@ -4,11 +4,12 @@ package com.github.zyyi.mybatis.generator.constant;
  * @author Zyyi
  * @since 2020/10/17 11:51 下午
  */
-public class StatementConstant {
+public class SqlServerStatementConstant {
     /**
      * 建表语句
+     * 1:表名 2:字段语句
      */
-    public static final String CREATE_TABLE = "CREATE TABLE %s (%s) COMMENT='%s'";
+    public static final String CREATE_TABLE = "CREATE TABLE %s (%s)";
 
     /**
      * 删表语句
@@ -17,8 +18,9 @@ public class StatementConstant {
 
     /**
      * 字段语句
+     * 1:字段名 2:类型 3:长度 4是否为空 5:主键
      */
-    public static final String COLUMN_INFO = "%s %s(%s) %s %s COMMENT '%s'";
+    public static final String COLUMN_INFO = "%s %s%s %s %s";
 
     /**
      * 索引名称
