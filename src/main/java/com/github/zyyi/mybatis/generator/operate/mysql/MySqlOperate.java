@@ -155,7 +155,7 @@ public class MySqlOperate implements DdlAutoOperate {
                                 // 字段类型
                                 columnType,
                                 // 字段长度
-                                column.length(),
+                                column.scale() == 0 ? column.length() : column.length() + StringUtil.COMMA + column.scale(),
                                 // 字段非空
                                 column.primaryKey() ? StringUtil.NOT_NULL : column.nullable() ? StringUtil.EMPTY : StringUtil.NOT_NULL,
                                 // 主键字段
@@ -165,7 +165,7 @@ public class MySqlOperate implements DdlAutoOperate {
                         )
                 );
             } else {
-                log.warn("无法识别字段:{}对应数据库的默认类型,请手动指定@Column的type", columnValue);
+                log.warn("无法识别字段:{}对应数据库的类型,请手动指定@Column的type值!", columnValue);
             }
         }
         return columnSql;

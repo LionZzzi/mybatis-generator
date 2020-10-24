@@ -14,7 +14,7 @@ public class SqlServerStatementConstant {
     /**
      * 删表语句
      */
-    public static final String DROP_TABLE = "DROP TABLE IF EXISTS %s";
+    public static final String DROP_TABLE = "IF OBJECT_ID( N'%s', N'U' ) IS NOT NULL DROP TABLE %s";
 
     /**
      * 字段语句

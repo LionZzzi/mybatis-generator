@@ -65,7 +65,10 @@ public class SqlServerOperate implements DdlAutoOperate {
 
     @Override
     public void destroy() {
-
+        // 扫描指定包路径下的注解类
+        Set<Class<?>> classes = ClassUtil.scanPackageByAnnotation(initProperties.getEntityPackage(), Table.class);
+        allSql.addAll(this.dropTableSql(classes));
+        baseOperate.run(allSql);
     }
 
     /**
@@ -98,6 +101,22 @@ public class SqlServerOperate implements DdlAutoOperate {
             );
         }
         return tableSql;
+    }
+
+    /**
+     * 删表语句
+     *
+     * @param classes 包含Table注解的类
+     * @return 删表语句
+     */
+    private List<String> dropTableSql(Collection<Class<?>> classes) {
+        return classes.stream()
+                .map(clazz -> {
+                    Table table = clazz.getAnnotation(Table.class);
+                    String tableName = baseOperate.getTableValue(table.value(), clazz);
+                    return String.format(SqlServerStatementConstant.DROP_TABLE, tableName, tableName);
+                })
+                .collect(Collectors.toList());
     }
 
     /**

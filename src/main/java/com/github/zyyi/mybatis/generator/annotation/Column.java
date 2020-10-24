@@ -31,6 +31,11 @@ public @interface Column {
     int length() default 255;
 
     /**
+     * 小数
+     */
+    int scale() default 0;
+
+    /**
      * 备注
      */
     String comment() default "";
