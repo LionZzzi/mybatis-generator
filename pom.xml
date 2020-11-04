@@ -45,4 +45,20 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <sonar.jdbc.url>jdbc:mysql://192.168.61.235:3306/sonar?useUnicode=true&amp;characterEncoding=utf8</sonar.jdbc.url>
+                <sonar.jdbc.driver>com.mysql.cj.jdbc.Driver</sonar.jdbc.driver>
+                <sonar.jdbc.username>root</sonar.jdbc.username>
+                <sonar.jdbc.password>root</sonar.jdbc.password>
+                <sonar.host.url>http://192.168.61.235:9000</sonar.host.url>
+            </properties>
+        </profile>
+    </profiles>
 </project>
